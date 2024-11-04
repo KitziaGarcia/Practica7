@@ -4,17 +4,20 @@ public class TridominoPiece extends Piece implements Movible {
     private int upperValue;
     private int leftValue;
     private int rightValue;
+    private int orientation;
 
     public TridominoPiece() {
         upperValue = 1;
         leftValue = 1;
         rightValue = 1;
+        orientation = 1;
     }
 
-    public TridominoPiece(int upperValue, int leftValue, int rightValue) {
+    public TridominoPiece(int upperValue, int leftValue, int rightValue, int orientation) {
         this.upperValue = upperValue;
         this.leftValue = leftValue;
         this.rightValue = rightValue;
+        this.orientation = orientation;
     }
 
     public int getUpperValue() {
@@ -41,6 +44,14 @@ public class TridominoPiece extends Piece implements Movible {
         this.rightValue = rightValue;
     }
 
+    public int getOrientation() {
+        return orientation;
+    }
+
+    public void setOrientation(int orientation) {
+        this.orientation = orientation;
+    }
+
     @Override
     public int getSumOfSides() {
         return getUpperValue() + getLeftValue() + getRightValue();
@@ -55,6 +66,7 @@ public class TridominoPiece extends Piece implements Movible {
         return "[" + getUpperValue() + ", " + getLeftValue() + ", " + getRightValue() + "]";
     }
 
+    @Override
     public void displayTileOptionsInConsole() {
         System.out.println("   " + getUpperValue() + "             " + getRightValue() + "             " + getLeftValue());
         System.out.println("  " + getLeftValue() + "  " + getRightValue() + "          " + getUpperValue() + "  " + getLeftValue() + "          " + getRightValue() + "  " + getUpperValue());
@@ -64,42 +76,72 @@ public class TridominoPiece extends Piece implements Movible {
     }
 
     @Override
-    public void displayTileInConsole(ArrayList<Integer> playableValues) {
+    public void displayTileInConsole(int orientation) {
         int upperValue = getUpperValue();
         int leftValue = getLeftValue();
         int rightValue = getRightValue();
 
-        if (playableValues.getFirst() == getLeftValue() && playableValues.getLast() == getRightValue()) {
+        if (orientation == 1) {
             System.out.println("   " + upperValue);
             System.out.println("  " + leftValue + "  " + rightValue);
-        } else if (playableValues.getFirst() == getUpperValue() && playableValues.getLast() == getLeftValue()) {
-            System.out.println("   " + rightValue);
-            System.out.println("  " + upperValue + "  " + leftValue);
-        } else if (playableValues.getFirst() == getRightValue() && playableValues.getLast() == getUpperValue()) {
-            System.out.println("   " + leftValue);
-            System.out.println("  " + rightValue + "  " + upperValue);
-        } else if (playableValues.getFirst() == getUpperValue() && playableValues.getLast() == -1) {
+        } else {
             System.out.println("  " + rightValue + "  " + leftValue);
             System.out.println("   " + upperValue);
-        } else if(playableValues.getFirst() == getRightValue() && playableValues.getLast() == -1) {
-            System.out.println("  " + leftValue + "  " + upperValue);
-            System.out.println("   " + rightValue);
-        } else if (playableValues.getFirst() == getLeftValue() && playableValues.getLast() == -1) {
-            System.out.println("  " + upperValue + "  " + rightValue);
-            System.out.println("   " + leftValue);
+        }
+    }
+
+    public void setDisplayOrientation(ArrayList<Integer> playableValues, int positionIndicator) {
+        if (positionIndicator == 1 || positionIndicator == 5) {
+            if (playableValues.getFirst() == getLeftValue() && playableValues.getLast() == getRightValue()) {
+                displayTileInConsole(1);
+            } else if (playableValues.getFirst() == getUpperValue() && playableValues.getLast() == getLeftValue()) {
+                rotateLeft();
+                displayTileInConsole(1);
+            } else if (playableValues.getFirst() == getRightValue() && playableValues.getLast() == getUpperValue()) {
+                rotateRight();
+                displayTileInConsole(1);
+            } else {
+                displayTileInConsole(1);
+            }
+            setOrientation(1);
+        } else if (positionIndicator == 3) {
+            if (playableValues.getFirst() == getUpperValue() && playableValues.getLast() == -1) {
+                displayTileInConsole(2);
+            } else if(playableValues.getFirst() == getRightValue() && playableValues.getLast() == -1) {
+                rotateLeft();
+                displayTileInConsole(2);
+            } else if (playableValues.getFirst() == getLeftValue() && playableValues.getLast() == -1) {
+                rotateRight();
+                displayTileInConsole(2);
+            } else {
+                displayTileInConsole(2);
+            }
+            setOrientation(2);
+        } else if (positionIndicator == -1) {
+            setOrientation(1);
+            displayTileInConsole(1);
+        } else if (positionIndicator == -2) {
+            setOrientation(2);
+            displayTileInConsole(2);
         } else {
-            System.out.println("   " + upperValue);
-            System.out.println("  " + leftValue + "  " + rightValue);
+            setOrientation(1);
+            displayTileInConsole(1);
         }
     }
 
     @Override
     public void rotateRight() {
-
+        int temp = upperValue;
+        upperValue = leftValue;
+        leftValue = rightValue;
+        rightValue = temp;
     }
 
     @Override
     public void rotateLeft() {
-
+        int temp = upperValue;
+        upperValue = rightValue;
+        rightValue = leftValue;
+        leftValue = temp;
     }
 }

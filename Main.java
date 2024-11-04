@@ -1,5 +1,11 @@
 import java.util.Scanner;
 
+/*
+   Agregar que la mula se ponga horizontal.
+   Checa el metodo para detectar si un jugador tiene movimientos.
+   Hacer que coman 2 si no tienen movimientos y si el bonyard no esta empty.
+ */
+
 public class Main {
     public static void main(String[] args) {
         Scanner input = new Scanner(System.in);

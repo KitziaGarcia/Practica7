@@ -21,7 +21,7 @@ public class Domino
         for (int i = 0; i <= higherDouble; i++) {
             value = i;
             for (int j = 0; j <= value; j++) {
-                DominoPiece newPiece = new DominoPiece(i, j);
+                DominoPiece newPiece = new DominoPiece(i, j, 0);
                 domino.add(newPiece);
             }
         }

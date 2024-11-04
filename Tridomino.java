@@ -13,7 +13,7 @@ public class Tridomino {
         for (int i = 0; i <= higherValue; i++) {
             for (int j = 0; j <= i; j++) {
                 for (int k = 0; k <= j; k++) {
-                    TridominoPiece newPiece = new TridominoPiece(i, j, k);
+                    TridominoPiece newPiece = new TridominoPiece(i, j, k, 0);
                     tridomino.add(newPiece);
                 }
             }
