@@ -24,6 +24,10 @@ public class Tridomino {
         Collections.shuffle(tridomino);
     }
 
+    public int getSize() {
+        return tridomino.size();
+    }
+
     // Returns the domino piece at a specified index `i` from the list.
     public TridominoPiece getPiece(int i) {
         return tridomino.get(i);
@@ -58,7 +62,7 @@ public class Tridomino {
                 }
             }
         }
-        System.out.println("No tiene esa ficha.");
+        System.out.println("No tiene esa ficha.\n");
         return null;
     }
 

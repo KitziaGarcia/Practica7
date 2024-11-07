@@ -58,7 +58,7 @@ public class DominoPiece extends Piece implements Movible {
             System.out.println("   --");
             System.out.println("   " + rightValue);
         } else {
-            System.out.println(toString());
+            System.out.println("  " + getLeftValue() + "| " + getRightValue());
         }
     }
 
@@ -66,8 +66,7 @@ public class DominoPiece extends Piece implements Movible {
     public void setDisplayOrientation(ArrayList<Integer> playableValues,  int positionIndicator) {
         int leftValue = getLeftValue();
         int rightValue = getRightValue();
-
-        if (positionIndicator == 0 || positionIndicator == 4) {
+        if (positionIndicator == 0 || positionIndicator == 1 || positionIndicator == 4) {
             if (playableValues.getFirst() == leftValue) {
                 displayTileInConsole(1);
             } else if (playableValues.getFirst() == rightValue) {

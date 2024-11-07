@@ -92,26 +92,26 @@ public class TridominoPiece extends Piece implements Movible {
 
     public void setDisplayOrientation(ArrayList<Integer> playableValues, int positionIndicator) {
         if (positionIndicator == 1 || positionIndicator == 5) {
-            if (playableValues.getFirst() == getLeftValue() && playableValues.getLast() == getRightValue()) {
+            if (playableValues.getFirst() == this.upperValue) {
                 displayTileInConsole(1);
-            } else if (playableValues.getFirst() == getUpperValue() && playableValues.getLast() == getLeftValue()) {
-                rotateLeft();
-                displayTileInConsole(1);
-            } else if (playableValues.getFirst() == getRightValue() && playableValues.getLast() == getUpperValue()) {
+            } else if (playableValues.getFirst() == this.leftValue) {
                 rotateRight();
+                displayTileInConsole(1);
+            } else if (playableValues.getFirst() == this.rightValue) {
+                rotateLeft();
                 displayTileInConsole(1);
             } else {
                 displayTileInConsole(1);
             }
             setOrientation(1);
         } else if (positionIndicator == 3) {
-            if (playableValues.getFirst() == getUpperValue() && playableValues.getLast() == -1) {
-                displayTileInConsole(2);
-            } else if(playableValues.getFirst() == getRightValue() && playableValues.getLast() == -1) {
-                rotateLeft();
-                displayTileInConsole(2);
-            } else if (playableValues.getFirst() == getLeftValue() && playableValues.getLast() == -1) {
+            if (playableValues.getFirst() == getUpperValue() && playableValues.getLast() == rightValue) {
                 rotateRight();
+                displayTileInConsole(2);
+            } else if (playableValues.getFirst() == getRightValue() && playableValues.getLast() == leftValue) {
+                displayTileInConsole(2);
+            } else if (playableValues.getFirst() == getLeftValue() && playableValues.getLast() == upperValue) {
+                rotateLeft();
                 displayTileInConsole(2);
             } else {
                 displayTileInConsole(2);

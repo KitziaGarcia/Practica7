@@ -71,7 +71,7 @@ public class Domino
                 }
             }
         }
-        System.out.println("No tiene esa ficha.");
+        System.out.println("No tiene esa ficha.\n");
         return null;
     }
 

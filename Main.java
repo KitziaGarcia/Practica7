@@ -1,13 +1,12 @@
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Scanner;
-
-/*
-   Agregar que la mula se ponga horizontal.
-   Checa el metodo para detectar si un jugador tiene movimientos.
-   Hacer que coman 2 si no tienen movimientos y si el bonyard no esta empty.
- */
 
 public class Main {
     public static void main(String[] args) {
+        /*ArrayList<Integer> playable = new ArrayList<>(Arrays.asList(2,5));
+        Game game = new Game(playable);*/
+
         Scanner input = new Scanner(System.in);
         int player1TotalDominoes = 0;
         int player1TotalTridominoes = 0;
