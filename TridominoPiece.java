@@ -92,8 +92,7 @@ public class TridominoPiece extends Piece implements Movible {
 
     public void setDisplayOrientation(ArrayList<Integer> playableValues, int positionIndicator) {
         if (positionIndicator == 1 || positionIndicator == 5) {
-            if (playableValues.getFirst() == this.upperValue) {
-            } else if (playableValues.getFirst() == this.leftValue) {
+            if (playableValues.getFirst() == this.leftValue) {
                 rotateRight();
             } else if (playableValues.getFirst() == this.rightValue) {
                 rotateLeft();
@@ -113,6 +112,35 @@ public class TridominoPiece extends Piece implements Movible {
         } else {
             setOrientation(1);
         }
+    }
+
+    public int getIndicatorForTwoDisplayOptions(ArrayList<Integer> playableValues) {
+        int c = 0;
+        if (upperValue == playableValues.getFirst() && leftValue == playableValues.getFirst()) {
+            c = 1;
+        } else if (upperValue == playableValues.getFirst() && rightValue == playableValues.getFirst()) {
+            c = 2;
+        } else if (rightValue == playableValues.getFirst() && leftValue == playableValues.getFirst()) {
+            c = 3;
+        }
+        return c;
+    }
+
+    public void showTwoDisplayOptions(ArrayList<Integer> playableValues, int indicator) {
+        if (indicator == 1) {
+            System.out.println("   " + getUpperValue() + "             " + getLeftValue());
+            System.out.println("  " + getLeftValue() + "  " + getRightValue() + "          " + getRightValue() + "  " + getUpperValue());
+        } else if (indicator == 2) {
+            System.out.println("   " + getUpperValue() + "             " + getRightValue());
+            System.out.println("  " + getLeftValue() + "  " + getRightValue() + "          " + getUpperValue() + "  " + getLeftValue());
+        } else if (indicator == 3) {
+            System.out.println("   " + getRightValue() + "             " + getLeftValue());
+            System.out.println("  " + getUpperValue() + "  " + getLeftValue() + "          " + getRightValue() + "  " + getUpperValue());
+        }
+    }
+
+    public boolean isTriple() {
+        return (this.leftValue == this.rightValue) && (this.leftValue == this.upperValue);
     }
 
     @Override

@@ -22,21 +22,11 @@ public class Game {
     private int positionIndicator;
     private ArrayList<Integer> orientation;
 
-
-    public Game(ArrayList<Integer> playableValues) {
-        DominoPiece piez = new DominoPiece();
-        setPieceInTable(piez);
-        DominoPiece pieza = new DominoPiece(5,2, 1);
-        this.playableValues = playableValues;
-
-        setPositionIndicator(1);
-        System.out.println(isTheValuePlayable(pieza));
-    }
-
     public Game(int player1TotalDominoes, int player1TotalTridominoes, int player2TotalDominoes, int player2TotalTridominoes) {
         initializeGame(player1TotalDominoes, player1TotalTridominoes, player2TotalDominoes, player2TotalTridominoes);
         setFirstTurn(true);
         getStartingTile();
+        displayUsedDominoesInConsole();
         play();
     }
 
@@ -236,7 +226,7 @@ public class Game {
             return;
         }
 
-        if (getPieceInTable() instanceof TridominoPiece) {
+        if (getPieceInTable() instanceof TridominoPiece && !(((TridominoPiece) getPieceInTable()).isTriple())) {
             System.out.println("\n\nSeleccione como quiere poner la ficha: ");
             ((TridominoPiece) getPieceInTable()).displayTileOptionsInConsole();
             int opt = Utilities.isInputValid(input, "Opcion 4." + "     Opcion 5." + "     Opcion 6.", 1, 6);
@@ -267,7 +257,7 @@ public class Game {
             }
 
             setTridominoPlayableValues();
-        } else {
+        } else if (getFoundPiece() instanceof DominoPiece && !(((DominoPiece) getFoundPiece()).isDouble())) {
             System.out.println("\n\nSeleccione como quiere poner la ficha: ");
             ((DominoPiece) getPieceInTable()).displayTileOptionsInConsole();
             int opt = Utilities.isInputValid(input, "Opcion 1." + "     Opcion 2.", 1, 2);
@@ -285,7 +275,6 @@ public class Game {
         usedTiles.add(getPieceInTable());
         orientation.add(getPieceInTable().getOrientation());
         setPlayersPoints(getPieceInTable().getSumOfSides());
-        System.out.println("PLAYABLE VALUES: " + getPlayableValues());
         setFirstTurn(false);
         setNextTurn();
     }
@@ -370,6 +359,23 @@ public class Game {
                     System.out.println("La ficha seleccionada no es jugable. Por favor, elige otra ficha.");
                     System.out.println();
                     setFoundPiece(null);
+                } else {
+                    int indicator = 0;
+                    indicator = ((TridominoPiece) getFoundPiece()).getIndicatorForTwoDisplayOptions(playableValues);
+                    if ((getPositionIndicator() == 1 || getPositionIndicator() == 5) && (indicator != 0) && !((TridominoPiece) getFoundPiece()).isTriple()) {
+                        System.out.println("\nSeleccione como quiere poner la ficha: ");
+                        ((TridominoPiece) getFoundPiece()).showTwoDisplayOptions(playableValues, indicator);
+                        int opt = Utilities.isInputValid(input, "Opcion 1." + "     Opcion 2.", 1, 2);
+
+                        if (opt == 1 && indicator == 1) {
+                            getFoundPiece().rotateRight();
+                        } else if (opt == 1 && indicator == 2) {
+                            getFoundPiece().rotateLeft();
+                        } else if (opt == 1 && indicator == 3) {
+                            getFoundPiece().rotateLeft();
+                        }
+                    }
+
                 }
             }
         }
@@ -378,8 +384,6 @@ public class Game {
             getFoundPiece().setDisplayOrientation(playableValues, getPositionIndicator());
             usedTiles.add(getFoundPiece());
             orientation.add(getFoundPiece().getOrientation());
-            System.out.println("USED: " + usedTiles);
-            System.out.println("ORIENTATION: " + orientation);
             setPieceInTable(getFoundPiece());
 
             if (getTurn() == 0) {

@@ -92,6 +92,10 @@ public class DominoPiece extends Piece implements Movible {
         System.out.println("   " + rightValue + "       " + leftValue);
     }
 
+    public boolean isDouble() {
+        return this.leftValue == this.rightValue;
+    }
+
     @Override
     public void rotateRight() {
         int temp = leftValue;
