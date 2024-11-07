@@ -1,4 +1,3 @@
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Scanner;
@@ -14,7 +13,6 @@ public class Game {
     ClearScreen clear = new ClearScreen();
     Scanner input = new Scanner(System.in);
     private Piece foundPiece;
-    //private TridominoPiece foundTridomino;
     private int turn;
     private boolean firstTurn;
     private ArrayList<Integer> playableValues;
@@ -106,7 +104,6 @@ public class Game {
 
         if (noMoreMovesInGame() && boneyard.isEmpty()) {
             showPlayerTiles();
-            System.out.println("Puntos jugador 1: " + points.getFirst() + ".   Puntos jugador 2: " + points.getLast() + ".");
             System.out.println("\nEl juego se ha cerrado y no hay mas fichas por comer.");
             winnerIndex = getWinner();
 
@@ -209,12 +206,16 @@ public class Game {
             getStartingPiecePlayer1().setDisplayOrientation(playableValues, -1);
         }
 
+        getStartingPiecePlayer1().displayTileInConsole(getStartingPiecePlayer1().getOrientation());
+
         System.out.println("Ficha seleccionada jugador 2: ");
         if (getStartingPiecePlayer2() instanceof DominoPiece) {
             getStartingPiecePlayer2().setDisplayOrientation(playableValues, -1);
         } else {
             getStartingPiecePlayer2().setDisplayOrientation(playableValues, -1);
         }
+
+        getStartingPiecePlayer2().displayTileInConsole(getStartingPiecePlayer2().getOrientation());
 
         if (getStartingPiecePlayer1().getSumOfSides() > getStartingPiecePlayer2().getSumOfSides()) {
             System.out.println("\nComienza el jugador 1 porque sumó " + getStartingPiecePlayer1().getSumOfSides() + " puntos.\n\n");
@@ -372,37 +373,13 @@ public class Game {
                 }
             }
         }
-        /*do {
-            System.out.println("Seleccione ficha a utilizar: ");
-            leftValue = Utilities.isInputValid(input, "Valor izquierdo: ", 0, 6);
-            rightValue = Utilities.isInputValid(input, "Valor derecho: ", 0, 6);
-            System.out.println();
-            selectedPiece = new DominoPiece(leftValue, rightValue, 0);
-            setFoundPiece(isTilePresent(selectedPiece, turn, 0, leftValue, rightValue));
-
-            if (isFirstTurn()) {
-                if (turn == 0) {
-                    setStartingPiecePlayer1((DominoPiece) getFoundPiece());
-                } else {
-                    setStartingPiecePlayer2((DominoPiece) getFoundPiece());
-                }
-            }
-
-            if (!isFirstTurn() && getFoundPiece() != null) {
-                isPlayable = isTheValuePlayable(getFoundPiece());
-
-                if (!isPlayable) {
-                    System.out.println("La ficha seleccionada no es jugable. Por favor, elige otra ficha.");
-                    System.out.println();
-                    setFoundPiece(null);
-                }
-            }
-        } while (getFoundPiece() == null);*/
 
         if (!firstTurn && getFoundPiece() != null) {
             getFoundPiece().setDisplayOrientation(playableValues, getPositionIndicator());
             usedTiles.add(getFoundPiece());
             orientation.add(getFoundPiece().getOrientation());
+            System.out.println("USED: " + usedTiles);
+            System.out.println("ORIENTATION: " + orientation);
             setPieceInTable(getFoundPiece());
 
             if (getTurn() == 0) {
@@ -412,58 +389,6 @@ public class Game {
             }
         }
     }
-
-    /*public void selectTridomino() {
-        setFoundPiece(null);
-        int value1;
-        int value2;
-        int value3;
-        int turn = getTurn();
-        boolean isPlayable = false;
-        Tridomino tridomino = new Tridomino();
-        TridominoPiece selectedPiece;
-
-        /*do {
-            System.out.println("Seleccione ficha a utilizar: ");
-            value1 = Utilities.isInputValid(input, "Valor 1: ", 0, 5);
-            value2 = Utilities.isInputValid(input, "Valor 2: ", 0, 5);
-            value3 = Utilities.isInputValid(input, "Valor 3: ", 0, 5);
-            System.out.println();
-            selectedPiece = new TridominoPiece(value1, value2, value3, 0);
-            setFoundPiece(isTilePresent(selectedPiece, turn, value1, value2, value3));
-
-            if (isFirstTurn()) {
-                if (turn == 0) {
-                    setStartingPiecePlayer1((TridominoPiece) getFoundPiece());
-                } else {
-                    setStartingPiecePlayer2((TridominoPiece) getFoundPiece());
-                }
-            }
-
-            if (!isFirstTurn() && getFoundPiece() != null) {
-                isPlayable = isTheValuePlayable(getFoundPiece());
-
-                if (!isPlayable) {
-                    System.out.println("La ficha seleccionada no es jugable. Por favor, elige otra ficha.");
-                    System.out.println();
-                    setFoundPiece(null);
-                }
-            }
-
-        } while (foundPiece == null);*/
-
-     /*   if (!firstTurn) {
-            usedTiles.add(getFoundPiece());
-            orientation.add(getFoundPiece().getOrientation());
-            setPieceInTable(getFoundPiece());
-
-            if (getTurn() == 0) {
-                player1Tiles.remove(getFoundPiece());
-            } else {
-                player2Tiles.remove(getFoundPiece());
-            }
-        }
-    }*/
 
     public int getTurn() {
         return turn;
@@ -585,12 +510,11 @@ public class Game {
     public void displayUsedDominoesInConsole() {
         for (int i = 0; i < usedTiles.size(); i++) {
             if (usedTiles.get(i) == usedTiles.getLast()) {
-                System.out.println("P.I: " + orientation.get(i));
                 usedTiles.get(i).displayTileInConsole(orientation.get(i));
+                orientation.set(i, usedTiles.get(i).getOrientation());
             } else {
                 usedTiles.get(i).displayTileInConsole(orientation.get(i));
             }
-            orientation.set(i, usedTiles.get(i).getOrientation());
         }
 
 
@@ -682,25 +606,6 @@ public class Game {
         } else {
             return 2;
         }
-
-        /*int c0 = 0;
-        int c1 = 0;
-
-        for (Piece piece : player1Tiles) {
-            c0++;
-        }
-
-        for (Piece piece : player2Tiles) {
-            c1++;
-        }
-
-        if (c0 > c1) {
-            return 0;
-        } else if (c0 < c1) {
-            return 1;
-        } else {
-            return -1;
-        }*/
     }
 
     /**

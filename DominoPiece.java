@@ -67,34 +67,18 @@ public class DominoPiece extends Piece implements Movible {
         int leftValue = getLeftValue();
         int rightValue = getRightValue();
         if (positionIndicator == 0 || positionIndicator == 1 || positionIndicator == 4) {
-            if (playableValues.getFirst() == leftValue) {
-                displayTileInConsole(1);
-            } else if (playableValues.getFirst() == rightValue) {
+            if (playableValues.getFirst() == rightValue) {
                 rotateLeft();
-                displayTileInConsole(1);
-            } else {
-                displayTileInConsole(1);
             }
-
             setOrientation(1);
         } else if (positionIndicator == 2) {
-            if (playableValues.getFirst() == leftValue && playableValues.getLast() == rightValue) {
-                displayTileInConsole(2);
-            } else if (playableValues.getFirst() == rightValue && playableValues.getLast() == leftValue) {
+            if (playableValues.getFirst() == rightValue && playableValues.getLast() == leftValue) {
                 rotateRight();
-                displayTileInConsole(2);
-            }  else {
-                displayTileInConsole(2);
             }
             setOrientation(2);
         } else if (positionIndicator == -1) {
             setOrientation(1);
-            displayTileInConsole(1);
-        } else {
-            System.out.println(toString());
         }
-
-
     }
 
     public String toString() {

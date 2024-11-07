@@ -4,8 +4,6 @@ import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
-        /*ArrayList<Integer> playable = new ArrayList<>(Arrays.asList(2,5));
-        Game game = new Game(playable);*/
 
         Scanner input = new Scanner(System.in);
         int player1TotalDominoes = 0;
