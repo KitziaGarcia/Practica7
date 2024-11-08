@@ -6,6 +6,9 @@ public class TridominoPiece extends Piece implements Movible {
     private int rightValue;
     private int orientation;
 
+    /**
+     * Initializes a TridominoPiece with default values of 1 for each side.
+     */
     public TridominoPiece() {
         upperValue = 1;
         leftValue = 1;
@@ -13,6 +16,13 @@ public class TridominoPiece extends Piece implements Movible {
         orientation = 1;
     }
 
+    /**
+     * Initializes a TridominoPiece with specified values for each side.
+     * @param upperValue the specified upper value.
+     * @param leftValue the specified left value.
+     * @param rightValue the specified right value.
+     * @param orientation the specified orientation.
+     */
     public TridominoPiece(int upperValue, int leftValue, int rightValue, int orientation) {
         this.upperValue = upperValue;
         this.leftValue = leftValue;
@@ -20,52 +30,66 @@ public class TridominoPiece extends Piece implements Movible {
         this.orientation = orientation;
     }
 
+    /**
+     * Returns the value of the upper side of the piece.
+     * @return the upper value.
+     */
     public int getUpperValue() {
         return upperValue;
     }
 
-    public void setUpperValue(int upperValue) {
-        this.upperValue = upperValue;
-    }
-
+    /**
+     * Returns the value of the left side of the piece.
+     * @return the left value.
+     */
     public int getLeftValue() {
         return leftValue;
     }
 
-    public void setLeftValue(int leftValue) {
-        this.leftValue = leftValue;
-    }
-
+    /**
+     * Returns the value of the right side of the piece.
+     * @return the right value.
+     */
     public int getRightValue() {
         return rightValue;
     }
 
-    public void setRightValue(int rightValue) {
-        this.rightValue = rightValue;
-    }
-
+    /**
+     * Returns the orientation of the piece.
+     * @return the value of the orientation.
+     */
     public int getOrientation() {
         return orientation;
     }
 
+    /**
+     * Sets the orientation of the piece to the specified value.
+     * @param orientation the specified orientation to set.
+     */
     public void setOrientation(int orientation) {
         this.orientation = orientation;
     }
 
+    /**
+     * Calculates the sum of all three sides of the piece.
+     * @return the sum of the three sides.
+     */
     @Override
     public int getSumOfSides() {
         return getUpperValue() + getLeftValue() + getRightValue();
     }
 
-    @Override
-    public boolean isValuePresent(int value) {
-        return (value == getUpperValue()) || (value == getLeftValue()) || (value == getRightValue());
-    }
-
+    /**
+     * Returns a string representation of the piece showing the values of its three sides.
+     * @return string representation of the piece.
+     */
     public String toString() {
         return "[" + getUpperValue() + ", " + getLeftValue() + ", " + getRightValue() + "]";
     }
 
+    /**
+     * Displays six different orientation options for the piece in the console.
+     */
     @Override
     public void displayTileOptionsInConsole() {
         System.out.println("   " + getUpperValue() + "             " + getRightValue() + "             " + getLeftValue());
@@ -75,6 +99,10 @@ public class TridominoPiece extends Piece implements Movible {
         System.out.println("   " + getUpperValue() + "             " + getRightValue() + "             " + getLeftValue());
     }
 
+    /**
+     * Displays the piece in the console according to the specified orientation.
+     * @param orientation the specified orientation.
+     */
     @Override
     public void displayTileInConsole(int orientation) {
         int upperValue = getUpperValue();
@@ -90,6 +118,11 @@ public class TridominoPiece extends Piece implements Movible {
         }
     }
 
+    /**
+     * Sets the display orientation of the piece based on the playable values and position indicator.
+     * @param playableValues current playable values.
+     * @param positionIndicator the position indicator of the piece.
+     */
     public void setDisplayOrientation(ArrayList<Integer> playableValues, int positionIndicator) {
         if (positionIndicator == 1 || positionIndicator == 5) {
             if (playableValues.getFirst() == this.leftValue) {
@@ -114,6 +147,11 @@ public class TridominoPiece extends Piece implements Movible {
         }
     }
 
+    /**
+     * Returns an indicator for two different display options based on playable values.
+     * @param playableValues the current playable values.
+     * @return the indicator.
+     */
     public int getIndicatorForTwoDisplayOptions(ArrayList<Integer> playableValues) {
         int c = 0;
         if (upperValue == playableValues.getFirst() && leftValue == playableValues.getFirst()) {
@@ -126,7 +164,11 @@ public class TridominoPiece extends Piece implements Movible {
         return c;
     }
 
-    public void showTwoDisplayOptions(ArrayList<Integer> playableValues, int indicator) {
+    /**
+     * Displays two orientation options in the console based on the specified indicator.
+     * @param indicator the indicator.
+     */
+    public void showTwoDisplayOptions(int indicator) {
         if (indicator == 1) {
             System.out.println("   " + getUpperValue() + "             " + getLeftValue());
             System.out.println("  " + getLeftValue() + "  " + getRightValue() + "          " + getRightValue() + "  " + getUpperValue());
@@ -139,10 +181,17 @@ public class TridominoPiece extends Piece implements Movible {
         }
     }
 
+    /**
+     * Checks if all three sides of the piece have the same value.
+     * @return true if the three sides are the same, false otherwise.
+     */
     public boolean isTriple() {
         return (this.leftValue == this.rightValue) && (this.leftValue == this.upperValue);
     }
 
+    /**
+     * Rotates the piece to the right, updating the values of each side.
+     */
     @Override
     public void rotateRight() {
         int temp = upperValue;
@@ -151,6 +200,9 @@ public class TridominoPiece extends Piece implements Movible {
         rightValue = temp;
     }
 
+    /**
+     * Rotates the piece to the left, updating the values of each side.
+     */
     @Override
     public void rotateLeft() {
         int temp = upperValue;

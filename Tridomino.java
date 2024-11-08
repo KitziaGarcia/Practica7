@@ -1,6 +1,13 @@
 import java.util.ArrayList;
 import java.util.Collections;
 
+/**
+ * The Tridomino class represents a set of tridomino pieces for a tridomino game.
+ * It initializes a collection of tridomino pieces based on the higher value
+ * specified during construction. The class provides methods to shuffle the
+ * pieces, retrieve individual pieces, remove pieces, print the collection
+ * to the console, and check for the presence or equality of domino pieces.
+ */
 public class Tridomino {
 
     private ArrayList<TridominoPiece> tridomino;
@@ -20,28 +27,45 @@ public class Tridomino {
         }
     }
 
+    /**
+     * Shuffles the domino set randomly using the `Collections.shuffle` method.
+     */
     public void shuffle() {
         Collections.shuffle(tridomino);
     }
 
+    /**
+     * Getter for the size of the tridomino set.
+     * @return the size.
+     */
     public int getSize() {
         return tridomino.size();
     }
 
-    // Returns the domino piece at a specified index `i` from the list.
+    /**
+     * Returns the tridomino piece at a specified index `i` from the list.
+     * @param i the specified index.
+     * @return the piece in that index.
+     */
     public TridominoPiece getPiece(int i) {
         return tridomino.get(i);
     }
 
-    // Removes a domino piece at the specified index `i` from the list.
+    /**
+     * Removes a tridomino piece at the specified index `i` from the list.
+     * @param i the specified index.
+     */
     public void removePiece(int i) {
         tridomino.remove(i);
     }
 
-    // Searches the list for a tridomino piece with the specified value1, value2, and value3.
-// It returns the piece if found, otherwise prints a message and returns null.
+    /**
+     * Searches the list for a tridomino piece with the specified upper value, leftValue and rightValue.
+     * @return the piece if found, otherwise prints a message and returns null.
+     */
     public TridominoPiece isTilePresent(ArrayList<Piece> tridomino, int value1, int value2, int value3) {
         TridominoPiece foundPiece = new TridominoPiece();
+
         for (Piece piece : tridomino) {
             if (piece instanceof DominoPiece) {
                 continue;
@@ -51,7 +75,6 @@ public class Tridomino {
                 int leftValue = foundPiece.getLeftValue();
                 int rightValue = foundPiece.getRightValue();
 
-                // Check all possible permutations of the values
                 if ((upperValue == value1 && leftValue == value2 && rightValue == value3) ||
                         (upperValue == value1 && leftValue == value3 && rightValue == value2) ||
                         (upperValue == value2 && leftValue == value1 && rightValue == value3) ||
@@ -65,7 +88,4 @@ public class Tridomino {
         System.out.println("No tiene esa ficha.\n");
         return null;
     }
-
-
-
 }

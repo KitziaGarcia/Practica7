@@ -27,38 +27,50 @@ public class Domino
         }
     }
 
+    /**
+     * Getter for the size of the domino set.
+     * @return the size.
+     */
     public int getSize() {
         return domino.size();
     }
 
-
-    // Prints the list of domino pieces to the console.
-    public void printDominoInConsole() {
-        System.out.println(domino.toString());
-    }
-
-    // Shuffles the domino set randomly using the `Collections.shuffle` method.
+    /**
+     * Shuffles the domino set randomly using the `Collections.shuffle` method.
+     */
     public void shuffle() {
         Collections.shuffle(domino);
     }
 
-    // Returns the domino piece at a specified index `i` from the list.
+    /**
+     * Returns the domino piece at a specified index `i` from the list.
+     * @param i the specified index.
+     * @return the piece in that index.
+     */
     public DominoPiece getPiece(int i) {
         return domino.get(i);
     }
 
-    // Removes a domino piece at the specified index `i` from the list.
+    /**
+     * Removes a domino piece at the specified index `i` from the list.
+     * @param i the specified index.
+     */
     public void removePiece(int i) {
         domino.remove(i);
     }
 
-    // Returns the entire list of domino pieces.
+    /**
+     * Returns he entire list of domino pieces.
+     * @returnthe domino pieces.
+     */
     public ArrayList<DominoPiece> getTiles() {
         return domino;
     }
 
-    // Searches the list for a domino piece with the specified leftValue and rightValue.
-    // It returns the piece if found, otherwise prints a message and returns null.
+    /**
+     * Searches the list for a domino piece with the specified leftValue and rightValue.
+     * @return the piece if found, otherwise prints a message and returns null.
+     */
     public DominoPiece isTilePresent(ArrayList<Piece> domino, int leftValue, int rightValue) {
         DominoPiece foundPiece = new DominoPiece();
         for (Piece piece : domino) {
@@ -73,12 +85,5 @@ public class Domino
         }
         System.out.println("No tiene esa ficha.\n");
         return null;
-    }
-
-    // Compares two domino pieces to check if they are equal.
-    // Returns true if both the left and right values of the pieces are identical.
-    public boolean areTilesEqual(DominoPiece piece1, DominoPiece piece2) {
-        //return piece1.equals(piece2);
-        return (piece1.getLeftValue() == piece2.getLeftValue()) && (piece1.getRightValue() == piece2.getRightValue());
     }
 }

@@ -3,14 +3,11 @@ import java.util.Arrays;
 import java.util.Scanner;
 
 public class Game {
-    private ArrayList<DominoPiece> domino;
-    private ArrayList<TridominoPiece> tridomino;
     private ArrayList<Object> boneyard;
     private ArrayList<Piece> player1Tiles;
     private ArrayList<Piece> player2Tiles;
     private ArrayList<Piece> usedTiles;
     private ArrayList<Integer> points;
-    ClearScreen clear = new ClearScreen();
     Scanner input = new Scanner(System.in);
     private Piece foundPiece;
     private int turn;
@@ -22,6 +19,14 @@ public class Game {
     private int positionIndicator;
     private ArrayList<Integer> orientation;
 
+    /**
+     * Constructor for the Game class. Initializes the game by setting up players' tiles,
+     * determining the starting player, and initiating the game.
+     * @param player1TotalDominoes the number of domino pieces for player 1.
+     * @param player1TotalTridominoes the number of tridomino pieces for player 1.
+     * @param player2TotalDominoes the number of domino pieces for player 2.
+     * @param player2TotalTridominoes the number of tridomino pieces for player 2.
+     */
     public Game(int player1TotalDominoes, int player1TotalTridominoes, int player2TotalDominoes, int player2TotalTridominoes) {
         initializeGame(player1TotalDominoes, player1TotalTridominoes, player2TotalDominoes, player2TotalTridominoes);
         setFirstTurn(true);
@@ -30,6 +35,14 @@ public class Game {
         play();
     }
 
+    /**
+     * Sets up the initial state of the game by shuffling the tiles, assigning tiles to each player,
+     * and preparing the boneyard.
+     * @param player1TotalDominoes the number of domino pieces for player 1.
+     * @param player1TotalTridominoes the number of tridomino pieces for player 1.
+     * @param player2TotalDominoes the number of domino pieces for player 2.
+     * @param player2TotalTridominoes the number of tridomino pieces for player 2.
+     */
     public void initializeGame(int player1TotalDominoes, int player1TotalTridominoes, int player2TotalDominoes, int player2TotalTridominoes) {
         boneyard = new ArrayList<>();
         Domino domino = new Domino();
@@ -83,13 +96,16 @@ public class Game {
         setStartingPiecePlayer2(null);
     }
 
+    /**
+     * Manages the main game loop, checking for available moves for each player,
+     * handling turns and determining the end of the game.
+     */
     public void play() {
         boolean moreMovesForPlayer;
         int winnerIndex;
-        System.out.println("INDICATOR FICHA PUESTA: " + getPositionIndicator());
+        boolean endGame = false;
         setPositionIndicator(-1);
-        System.out.println("Fichas en pozo: " + boneyard.size());
-        System.out.println("USED: " + usedTiles);
+        System.out.println("\nFichas en pozo: " + boneyard.size());
         System.out.println("Puntos jugador 1: " + points.getFirst() + ".   Puntos jugador 2: " + points.getLast() + ".");
 
         if (noMoreMovesInGame() && boneyard.isEmpty()) {
@@ -149,6 +165,15 @@ public class Game {
         selectTileType();
         displayUsedDominoesInConsole();
 
+        if (player1Tiles.isEmpty() || player2Tiles.isEmpty()) {
+            endGame = true;
+        }
+
+        if (endGame) {
+            winnerIndex = getWinner();
+            System.out.print("Ha ganado el jugador " + (winnerIndex + 1) + " con " + points.get(winnerIndex) + " puntos.");
+        }
+
         if (getPieceInTable() instanceof DominoPiece) {
             setDominoPlayableValues();
         } else {
@@ -161,6 +186,9 @@ public class Game {
         play();
     }
 
+    /**
+     * It prints the players' tiles in console.
+     */
     public void showPlayerTiles() {
         System.out.println("\nFichas jugador 1: " + player1Tiles);
         pressEnterToContinue();
@@ -168,6 +196,10 @@ public class Game {
         System.out.println("Fichas jugador 2: " + player2Tiles);
     }
 
+    /**
+     * Manages the selection of the starting tile for both players.
+     * If both players choose tiles with the same sum, they must reselect their pieces.
+     */
     public void getStartingTile() {
         int opc;
 
@@ -222,6 +254,7 @@ public class Game {
             player2Tiles.remove(getStartingPiecePlayer2());
         } else {
             System.out.println("Las piezas tienen el mismo valor, seleccionen de nuevo.");
+            setNextTurn();
             getStartingTile();
             return;
         }
@@ -255,8 +288,6 @@ public class Game {
                     getPieceInTable().rotateRight();
                     break;
             }
-
-            setTridominoPlayableValues();
         } else if (getFoundPiece() instanceof DominoPiece && !(((DominoPiece) getFoundPiece()).isDouble())) {
             System.out.println("\n\nSeleccione como quiere poner la ficha: ");
             ((DominoPiece) getPieceInTable()).displayTileOptionsInConsole();
@@ -267,8 +298,15 @@ public class Game {
             if (opt == 2) {
                 getPieceInTable().rotateLeft();
             }
+        }
 
+        if (getFoundPiece() instanceof DominoPiece) {
             setDominoPlayableValues();
+        } else if (getFoundPiece() instanceof TridominoPiece){
+            if (((TridominoPiece) getFoundPiece()).isTriple()) {
+                setPositionIndicator(-1);
+            }
+            setTridominoPlayableValues();
         }
 
         getPieceInTable().setDisplayOrientation(playableValues, getPositionIndicator());
@@ -279,6 +317,9 @@ public class Game {
         setNextTurn();
     }
 
+    /**
+     * Allows the current player to select the type of tile they want to play (Domino or Tridomino).
+     */
     public void selectTileType() {
         int opt;
 
@@ -296,6 +337,12 @@ public class Game {
         } while (getFoundPiece() == null);
     }
 
+    /**
+     * Selects a specific piece based on the player's choice of tile type and values.
+     * It checks if the tile is present in the player's hand and if it is playable.
+     *
+     * @param option The type of piece the player chooses to play, 1 for Domino or 2 for Tridomino.
+     */
     public void selectPiece(int option) {
         setFoundPiece(null);
         int leftValue;
@@ -362,9 +409,9 @@ public class Game {
                 } else {
                     int indicator = 0;
                     indicator = ((TridominoPiece) getFoundPiece()).getIndicatorForTwoDisplayOptions(playableValues);
-                    if ((getPositionIndicator() == 1 || getPositionIndicator() == 5) && (indicator != 0) && !((TridominoPiece) getFoundPiece()).isTriple()) {
+                    if ((getPositionIndicator() == 1 || getPositionIndicator() == 5) && (indicator != 0) && !(((TridominoPiece) getFoundPiece()).isTriple())) {
                         System.out.println("\nSeleccione como quiere poner la ficha: ");
-                        ((TridominoPiece) getFoundPiece()).showTwoDisplayOptions(playableValues, indicator);
+                        ((TridominoPiece) getFoundPiece()).showTwoDisplayOptions(indicator);
                         int opt = Utilities.isInputValid(input, "Opcion 1." + "     Opcion 2.", 1, 2);
 
                         if (opt == 1 && indicator == 1) {
@@ -375,11 +422,9 @@ public class Game {
                             getFoundPiece().rotateLeft();
                         }
                     }
-
                 }
             }
         }
-
         if (!firstTurn && getFoundPiece() != null) {
             getFoundPiece().setDisplayOrientation(playableValues, getPositionIndicator());
             usedTiles.add(getFoundPiece());
@@ -394,62 +439,114 @@ public class Game {
         }
     }
 
+    /**
+     * Returns the current turn.
+     * @return The value representing the current turn.
+     */
     public int getTurn() {
         return turn;
     }
 
+    /**
+     * Sets the current turn based on the parameter.
+     * @param turn The value representing the turn to set.
+     */
     public void setTurn(int turn) {
         this.turn = turn;
     }
 
+    /**
+     * Checks if it is the first turn of the game.
+     * @return true if it is the first turn, false otherwise.
+     */
     public boolean isFirstTurn() {
         return firstTurn;
     }
 
+    /**
+     * Sets the first turn status.
+     * @param firstTurn A boolean value to set the first turn status.
+     */
     public void setFirstTurn(boolean firstTurn) {
         this.firstTurn = firstTurn;
     }
 
-    public ArrayList<Integer> getPlayableValues() {
-        return playableValues;
-    }
-
+    /**
+     * Getter for the starting piece for player 1.
+     * @return Piece representing player 1 starting piece.
+     */
     public Piece getStartingPiecePlayer1() {
         return startingPiecePlayer1;
     }
 
+    /**
+     * Sets the starting piece for player 1.
+     * @param startingPiecePlayer1 Piece to be set as player 1 starting piece.
+     */
     public void setStartingPiecePlayer1(Piece startingPiecePlayer1) {
         this.startingPiecePlayer1 = startingPiecePlayer1;
     }
 
+    /**
+     * Getter for the starting piece for player 2.
+     * @return Piece representing player 2 starting piece.
+     */
     public Piece getStartingPiecePlayer2() {
         return startingPiecePlayer2;
     }
 
+    /**
+     * Sets the starting piece for player 2.
+     * @param startingPiecePlayer2 Piece to be set as player 2 starting piece.
+     */
     public void setStartingPiecePlayer2(Piece startingPiecePlayer2) {
         this.startingPiecePlayer2 = startingPiecePlayer2;
     }
 
+    /**
+     * Retrieves the piece currently in play on the table.
+     * @return Piece currently in play on the table.
+     */
     public Piece getPieceInTable() {
         return pieceInTable;
     }
 
+    /**
+     * Sets the piece currently in play on the table.
+     * @param pieceInTable Piece to be set as the current piece on the table.
+     */
     public void setPieceInTable(Piece pieceInTable) {
         this.pieceInTable = pieceInTable;
     }
 
+    /**
+     * Retrieves the found piece from the player's hand.
+     * @return Piece that was found in the player's hand.
+     */
     public Piece getFoundPiece() {
         return foundPiece;
     }
 
+    /**
+     * Sets the found piece in the player's hand.
+     * @param foundPiece Piece to be set as the found piece.
+     */
     public void setFoundPiece(Piece foundPiece) {
         this.foundPiece = foundPiece;
     }
 
+    /**
+     * Retrieves the position indicator for the piece placement.
+     * @return int representing the position indicator.
+     */
     public int getPositionIndicator() {
         return positionIndicator;
     }
 
+    /**
+     * Sets the position indicator for the piece placement.
+     * @param positionIndicator int to be set as the position indicator.
+     */
     public void setPositionIndicator(int positionIndicator) {
         this.positionIndicator = positionIndicator;
     }
@@ -465,9 +562,11 @@ public class Game {
         }
     }
 
+    /**
+     * Configures the playable values for a Tridomino piece based on the position indicator.
+     */
     public void setTridominoPlayableValues() {
         TridominoPiece piece = (TridominoPiece) getPieceInTable();
-
         switch (getPositionIndicator()) {
             case -1, 1, 5:
                 playableValues.set(0, piece.getLeftValue());
@@ -480,6 +579,9 @@ public class Game {
         }
     }
 
+    /**
+     * Configures the playable values for a Domino piece based on the position indicator.
+     */
     public void setDominoPlayableValues() {
         DominoPiece piece = (DominoPiece) getPieceInTable();
 
@@ -495,6 +597,15 @@ public class Game {
         }
     }
 
+    /**
+     * Checks if a tile is present in the player's hand for the specified values.
+     * @param piece Piece to search for in the player's hand.
+     * @param turn The current turn.
+     * @param upperValue Upper value of the tile.
+     * @param leftValue Left value of the tile.
+     * @param rightValue Right value of the tile.
+     * @return Piece that matches the specified values, or null if not found.
+     */
     public Piece isTilePresent(Piece piece, int turn, int upperValue, int leftValue, int rightValue) {
         Domino domino = new Domino();
         Tridomino tridomino = new Tridomino();
@@ -511,6 +622,9 @@ public class Game {
         return foundPiece;
     }
 
+    /**
+     * Displays all used domino tiles in the console with their respective orientations.
+     */
     public void displayUsedDominoesInConsole() {
         for (int i = 0; i < usedTiles.size(); i++) {
             if (usedTiles.get(i) == usedTiles.getLast()) {
@@ -526,8 +640,10 @@ public class Game {
 
     /**
      * Checks if a value is playable.
-     * Compares the left and right values with the current playable values.
+     * If the selected piece is a Domino, it compares the left and right values with the current playable values.
+     * If the selected piece is a Tridomino, it compares the upper, left and right value with the current playable values.
      *
+     * @param selectedPiece The selected piece from the player's hand.
      * @return True if either value is playable, false otherwise.
      */
     public boolean isTheValuePlayable(Piece selectedPiece) {
@@ -564,12 +680,15 @@ public class Game {
         } else if (getPieceInTable() instanceof TridominoPiece && playableValues.getLast() == -1 && selectedPiece instanceof TridominoPiece) {
             setPositionIndicator(5);
             return upperValue == playableValues.getFirst() || leftValue == playableValues.getFirst() || rightValue == playableValues.getFirst();
-        } else {
-            System.out.print("NO ENTRA");
         }
         return false;
     }
 
+    /**
+     * Determines if there are more moves available for the current player.
+     * @param playerTiles Tiles held by the current player.
+     * @return true if the player has playable moves, false otherwise.
+     */
     public boolean moreMovesForPlayer(ArrayList<Piece> playerTiles) {
         boolean moreMoves = false;
         int totalOfMoves = 0;
@@ -587,6 +706,10 @@ public class Game {
         return totalOfMoves > 0;
     }
 
+    /**
+     * Checks if there are no more moves available for both players in the game.
+     * @return true if both players have no moves left, false otherwise.
+     */
     public boolean noMoreMovesInGame() {
         boolean moreMovesPlayer1;
         boolean moreMovesPlayer2;
@@ -602,6 +725,10 @@ public class Game {
 
     }
 
+    /**
+     * Determines the winner of the game based on points.
+     * @return int representing the winning player.
+     */
     public int getWinner() {
         if (points.getFirst() > points.getLast()) {
             return 0;
